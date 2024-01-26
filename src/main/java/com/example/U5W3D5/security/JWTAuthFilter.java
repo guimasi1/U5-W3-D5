@@ -30,7 +30,7 @@ public class JWTAuthFilter  extends OncePerRequestFilter {
 
         String authHeader = request.getHeader("Authorization");
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            throw new UnauthorizedException("Per favore metti il token nell'Authorization header");
+            throw new UnauthorizedException("Per favore metti il token nell' Authorization header");
         } else {
             String accessToken = authHeader.substring(7);
             jwtTools.verifyToken(accessToken);
@@ -47,12 +47,13 @@ public class JWTAuthFilter  extends OncePerRequestFilter {
 
         return new AntPathMatcher().match("/auth/**", request.getServletPath());
     }
-   /* @Override
+
+/*    @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
-        AntPathMatcher pathMatcher = new AntPathMatcher();
-        return pathMatcher.match("/auth/**", request.getServletPath()) ||
-                pathMatcher.match("/v3/api-docs/**", request.getServletPath());
+        String path = request.getServletPath();
+        return path.equals("/v3/api-docs.yaml");
     }*/
+
 
 }
 

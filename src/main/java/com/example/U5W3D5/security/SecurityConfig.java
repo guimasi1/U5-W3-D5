@@ -1,5 +1,6 @@
 package com.example.U5W3D5.security;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -32,6 +33,8 @@ public class SecurityConfig {
 
         return httpSecurity.build();
     }
+
+
 
     @Bean
     PasswordEncoder getPwEncoder() {
