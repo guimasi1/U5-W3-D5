@@ -1,7 +1,10 @@
 package com.example.U5W3D5.user;
 
 
+import com.example.U5W3D5.event.Event;
+import com.example.U5W3D5.event.EventsDAO;
 import com.example.U5W3D5.exceptions.NotFoundException;
+import com.example.U5W3D5.exceptions.ParticipationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -16,6 +19,9 @@ import java.util.UUID;
 public class UsersService {
     @Autowired
     UsersDAO usersDAO;
+
+    @Autowired
+    EventsDAO eventsDAO;
 
     public Page<User> getUsers(int page, int size, String orderBy) {
         Pageable pageable = PageRequest.of(page,size, Sort.by(orderBy));

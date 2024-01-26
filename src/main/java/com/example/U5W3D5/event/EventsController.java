@@ -60,6 +60,7 @@ public class EventsController {
 
 
     @PatchMapping("/{id}/upload")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public Event uploadImage(@RequestParam("image") MultipartFile file, @PathVariable UUID id) throws IOException {
         return eventsService.uploadImage(file, id);
     }

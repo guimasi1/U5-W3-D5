@@ -3,6 +3,9 @@ package com.example.U5W3D5.event;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import com.example.U5W3D5.exceptions.NotFoundException;
+import com.example.U5W3D5.exceptions.ParticipationException;
+import com.example.U5W3D5.user.User;
+import com.example.U5W3D5.user.UsersDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -23,6 +26,8 @@ public class EventsService {
     @Autowired
     Cloudinary cloudinary;
 
+    @Autowired
+    UsersDAO usersDAO;
     public Event save(NewEventDTO body) {
         Event event = new Event();
         event.setTitle(body.title());
@@ -67,5 +72,8 @@ public class EventsService {
         event.setImageUrl(url);
         return eventsDAO.save(event);
     }
+
+
+
 
 }

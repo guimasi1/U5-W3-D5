@@ -23,6 +23,11 @@ public class ExceptionsHandler {
     public ErrorsDTO handleUnauthorized(UnauthorizedException e) {
         return new ErrorsDTO(e.getMessage(),LocalDateTime.now());
     }
+    @ExceptionHandler(ParticipationException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorsDTO handleParticipation(ParticipationException e) {
+        return new ErrorsDTO(e.getMessage(),LocalDateTime.now());
+    }
 
     @ExceptionHandler(NotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)

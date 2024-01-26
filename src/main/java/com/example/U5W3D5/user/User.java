@@ -2,6 +2,7 @@ package com.example.U5W3D5.user;
 
 import com.example.U5W3D5.event.Event;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -19,6 +20,7 @@ import java.util.UUID;
 @ToString
 @Entity
 @Table(name = "users")
+@JsonIgnoreProperties({"password", "enabled", "authorities","accountNonExpired", "credentialsNonExpired","accountNonLocked","role"} )
 public class User implements UserDetails {
     @Setter(AccessLevel.NONE)
     @Id
@@ -38,6 +40,7 @@ public class User implements UserDetails {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "event_id"))
     @ToString.Exclude
+    @JsonIgnore
     private List<Event> events;
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
