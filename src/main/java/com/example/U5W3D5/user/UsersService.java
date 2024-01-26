@@ -69,6 +69,12 @@ public class UsersService {
         return usersDAO.save(user);
     }
 
+    public User demoteToUser(UUID id) {
+        User user =usersDAO.findById(id).orElseThrow(()-> new NotFoundException(id));
+        user.setRole(UserRole.USER);
+        return usersDAO.save(user);
+    }
+
     public Event bookEvent(User currentUser, UUID eventId) {
         User user = this.findById(currentUser.getId());
         Event event = eventsDAO.findById(eventId).orElseThrow(() -> new NotFoundException(eventId));

@@ -28,11 +28,20 @@ public class UsersController {
         return usersService.getUsers(name, surname, page, size, id);
     }
 
+    // metodo per promuovere ad organizzatore
     @GetMapping("/{id}/admin")
     @PreAuthorize("hasAuthority('ADMIN')")
     public User setAdmin(@PathVariable UUID id) {
         return usersService.promoteToAdmin(id);
     }
+
+    // metodo per rimuovere ruolo organizzatore
+    @GetMapping("/{id}/demote")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public User demote(@PathVariable UUID id) {
+        return usersService.demoteToUser(id);
+    }
+
 
     @GetMapping("/me")
     public User getMyProfile(@AuthenticationPrincipal User myUser) {
