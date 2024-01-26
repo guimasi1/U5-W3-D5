@@ -1,5 +1,7 @@
 package com.example.U5W3D5.event;
 
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import com.example.U5W3D5.exceptions.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -7,7 +9,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.UUID;
 
@@ -15,6 +19,9 @@ import java.util.UUID;
 public class EventsService {
     @Autowired
     EventsDAO eventsDAO;
+
+    @Autowired
+    Cloudinary cloudinary;
 
     public Event save(NewEventDTO body) {
         Event event = new Event();
@@ -35,6 +42,30 @@ public class EventsService {
         Pageable pageable = PageRequest.of(page, size, Sort.by(orderBy));
         return eventsDAO.findAll(pageable);
     }
+    public Event updateById(UUID id, NewEventDTO body) {
+        Event event = eventsDAO.findById(id).orElseThrow(() -> new NotFoundException(id));
+        event.setTitle(body.title());
+        event.setDescription(body.description());
+        event.setDate(LocalDate.parse(body.date()));
+        event.setLocation(body.location());
+        event.setMaxParticipants(body.maxParticipants());
+        return eventsDAO.save(event);
+    }
 
+    public void deleteById(UUID id) {
+        Event event = eventsDAO.findById(id).orElseThrow(() -> new NotFoundException(id));
+        eventsDAO.delete(event);
+    }
+
+    public Event uploadImage(MultipartFile file, UUID id) throws IOException {
+
+        String url = (String) cloudinary.uploader()
+                .upload(file.getBytes(), ObjectUtils.emptyMap())
+                .get("url");
+        Event event = this.findById(id);
+
+        event.setImageUrl(url);
+        return eventsDAO.save(event);
+    }
 
 }
