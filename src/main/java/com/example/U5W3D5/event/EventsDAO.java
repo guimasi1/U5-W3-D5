@@ -8,6 +8,7 @@ import java.util.UUID;
 
 @Repository
 public interface EventsDAO extends JpaRepository<Event, UUID> {
-    Optional<Event> findByTitle(String title);
+     Optional<Event> findByTitle(String title);
+     Optional<Event> findById(UUID id);
 
 }
