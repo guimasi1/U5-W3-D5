@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 
@@ -22,6 +23,10 @@ public class UsersService {
 
     @Autowired
     EventsDAO eventsDAO;
+
+    public List<User> findAll() {
+        return usersDAO.findAll();
+    }
 
     public Page<User> getUsers(int page, int size, String orderBy) {
         Pageable pageable = PageRequest.of(page,size, Sort.by(orderBy));
@@ -63,6 +68,35 @@ public class UsersService {
         user.setRole(UserRole.ADMIN);
         return usersDAO.save(user);
     }
+
+    public Event bookEvent(User currentUser, UUID eventId) {
+        User user = this.findById(currentUser.getId());
+        Event event = eventsDAO.findById(eventId).orElseThrow(() -> new NotFoundException(eventId));
+        if (event.getUsers().contains(user)) throw new ParticipationException(user, event);
+        if (event.getUsers().size() < event.getMaxParticipants()) {
+            event.getUsers().add(user);
+            return eventsDAO.save(event);
+        } else {
+            throw new ParticipationException("Non ci sono più posti disponibili");
+        }
+    }
+
+    public Page<Event> getEvents(User user, int page, int size, String orderBy) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(orderBy));
+        return eventsDAO.findByUsers(user, pageable);
+    }
+
+    public User removeBooking(User currentUser, UUID eventId) {
+        User user = this.findById(currentUser.getId());
+        Event event = eventsDAO.findById(eventId).orElseThrow(() -> new NotFoundException(eventId));
+        if(!user.getEvents().contains(event)) throw new ParticipationException("Spiacenti, non risulta prenotato per questo evento, non è pertanto possibile cancellare la prenotazione.");
+        user.getEvents().remove(event);
+        event.getUsers().remove(user);
+
+        eventsDAO.save(event);
+        return usersDAO.save(user);
+    }
+
 
 
 }

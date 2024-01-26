@@ -8,11 +8,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class MyRunner implements CommandLineRunner {
 
-
+    @Autowired
+    UsersService usersService;
     @Override
     public void run(String... args) throws Exception {
         System.out.println("Hello");
+        // usersService.findAll().forEach(System.out::println);
     }
+
 
 
 }

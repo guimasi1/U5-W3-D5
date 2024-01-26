@@ -39,5 +39,26 @@ public class UsersController {
         return myUser;
     }
 
+    // metodo per prenotare un evento in base all'id dell'evento
+    @GetMapping("/me/book/{id}")
+    public Event bookEvent(@AuthenticationPrincipal User user, @PathVariable UUID id) {
+        return usersService.bookEvent(user, id);
+    }
+
+    // metodo per vedere gli eventi in base all'utente
+
+    @GetMapping("/me/events")
+    public Page<Event> getEvents(@AuthenticationPrincipal User user,
+                                 @RequestParam(defaultValue = "0") int page,
+                                 @RequestParam(defaultValue = "10") int size,
+                                 @RequestParam(defaultValue = "id") String orderBy) {
+        return usersService.getEvents(user, page, size, orderBy);
+    }
+
+    @GetMapping("/me/unbook/{id}")
+    public User removeBooking(@AuthenticationPrincipal User user, @PathVariable UUID id) {
+        return usersService.removeBooking(user,id);
+    }
+
 
 }
