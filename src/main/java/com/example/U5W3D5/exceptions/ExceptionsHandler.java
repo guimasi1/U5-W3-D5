@@ -28,12 +28,17 @@ public class ExceptionsHandler {
     public ErrorsDTO handleParticipation(ParticipationException e) {
         return new ErrorsDTO(e.getMessage(),LocalDateTime.now());
     }
-
+    @ExceptionHandler(RoleException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorsDTO handleRole(RoleException e) {
+        return new ErrorsDTO(e.getMessage(),LocalDateTime.now());
+    }
     @ExceptionHandler(NotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorsDTO handleNotFound(NotFoundException e) {
         return new ErrorsDTO(e.getMessage(),LocalDateTime.now());
     }
+
     @ExceptionHandler
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorsDTO handleGeneric(Exception e) {

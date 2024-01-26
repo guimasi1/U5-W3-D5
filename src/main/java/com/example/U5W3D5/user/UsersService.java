@@ -5,6 +5,7 @@ import com.example.U5W3D5.event.Event;
 import com.example.U5W3D5.event.EventsDAO;
 import com.example.U5W3D5.exceptions.NotFoundException;
 import com.example.U5W3D5.exceptions.ParticipationException;
+import com.example.U5W3D5.exceptions.RoleException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -65,12 +66,14 @@ public class UsersService {
 
     public User promoteToAdmin(UUID id) {
         User user = usersDAO.findById(id).orElseThrow(() -> new NotFoundException(id));
+        if(user.getRole().equals(UserRole.ADMIN)) throw new RoleException("L'utente è già un organizzatore");
         user.setRole(UserRole.ADMIN);
         return usersDAO.save(user);
     }
 
     public User demoteToUser(UUID id) {
         User user =usersDAO.findById(id).orElseThrow(()-> new NotFoundException(id));
+        if(user.getRole().equals(UserRole.USER)) throw new RoleException("L'utente non è un organizzatore");
         user.setRole(UserRole.USER);
         return usersDAO.save(user);
     }
