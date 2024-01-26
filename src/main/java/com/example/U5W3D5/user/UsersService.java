@@ -52,4 +52,11 @@ public class UsersService {
 
     }
 
+    public User promoteToAdmin(UUID id) {
+        User user = usersDAO.findById(id).orElseThrow(() -> new NotFoundException(id));
+        user.setRole(UserRole.ADMIN);
+        return usersDAO.save(user);
+    }
+
+
 }
